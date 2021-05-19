@@ -95,7 +95,7 @@ public class Main extends Application {
             try {
                 inputStream = new Scanner(new File(selectedFile.getAbsolutePath())).useDelimiter(", |\\n");
             } catch (FileNotFoundException e) {
-                System.out.println("File not found!");
+                textArea.appendText("File not found!\n");
             }
 
             Vector<Employee> employees = new Vector<>();
@@ -115,8 +115,10 @@ public class Main extends Application {
 
                 try {
                     from = (Date) dateFormat.parse(dateFrom);
-                    to = (Date) dateFormat.parse(dateTo);
-                } catch (ParseException ignored) { }
+                    to = (dateTo.equals("NULL\r") || dateTo.equals("NULL")) ? null : (Date) dateFormat.parse(dateTo);
+                } catch (ParseException e) {
+                    textArea.appendText("Failed parsing date!\n");
+                }
 
                 employee.setDateFrom(from);
                 employee.setDateTo(to);
@@ -181,12 +183,12 @@ public class Main extends Application {
 
                         if (days.compareTo(maxDays) > 0) {
                             maxDays = days;
+                            first = employees.get(i);
+                            second = employees.get(j);
                         }
 
                         if (difference > maxDiff) {
                             maxDiff = difference;
-                            first = employees.get(i);
-                            second = employees.get(j);
                         }
                     }
                 }
