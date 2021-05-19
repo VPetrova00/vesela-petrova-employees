@@ -99,7 +99,7 @@ public class Main extends Application {
             }
 
             Vector<Employee> employees = new Vector<>();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            List<String> formatPatterns = Arrays.asList("yyyy-MM-dd", "dd.MM.yyyy", "dd/MM/yyyy", "dd MMM yyyy", "yyyy.MM.dd");
 
             while (inputStream.hasNext()) {
                 String eId = inputStream.next();
@@ -113,11 +113,16 @@ public class Main extends Application {
                 Date from = null;
                 Date to = null;
 
-                try {
-                    from = (Date) dateFormat.parse(dateFrom);
-                    to = (dateTo.equals("NULL\r") || dateTo.equals("NULL")) ? null : (Date) dateFormat.parse(dateTo);
-                } catch (ParseException e) {
-                    textArea.appendText("Failed parsing date!\n");
+                for (String format : formatPatterns) {
+                    try {
+                        DateFormat dateFormat = new SimpleDateFormat(format);
+                        from = (Date) dateFormat.parse(dateFrom);
+                        to = (dateTo.equals("NULL\r") || dateTo.equals("NULL")) ? null : (Date) dateFormat.parse(dateTo);
+                    } catch (ParseException e) {
+                        //it is correct to print an error but there are several formats implemented and until the correct one is found the program will throw errors
+                        //because of that I will comment this line of code
+                        //textArea.appendText("Failed parsing date!\n");
+                    }
                 }
 
                 employee.setDateFrom(from);
